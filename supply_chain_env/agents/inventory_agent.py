@@ -1,0 +1,1 @@
+just created the supply_chain_env/agents/inventory_agent.py
