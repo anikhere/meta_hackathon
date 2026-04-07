@@ -1,11 +1,9 @@
-class Observation:
-    def __init__(self, inventory: int, demand: int):
-        self.inventory = inventory
-        self.demand = demand
+from pydantic import BaseModel, Field
+
+
+class Observation(BaseModel):
+    inventory: int = Field(..., ge=0, description="Current inventory level")
+    demand: int = Field(..., ge=0, description="Current step demand")
 
     def to_dict(self):
-        return {
-            "inventory": self.inventory,
-            "demand": self.demand
-        }
-    
+        return self.model_dump()

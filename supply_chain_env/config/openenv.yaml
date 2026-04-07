@@ -1,18 +1,50 @@
 name: SupplyChainEnv
-description: A simple supply chain inventory management environment for ordering and demand fulfillment.
+description: A production-grade supply chain inventory optimization environment for OpenEnv
+version: 1.0.0
+
 observation_space:
-  inventory:
-    type: integer
-    description: current inventory after sales
-  demand:
-    type: integer
-    description: customer demand for the current step
+  type: object
+  properties:
+    inventory:
+      type: integer
+      description: Current inventory level after sales
+    demand:
+      type: integer
+      description: Customer demand for current step
+  required:
+    - inventory
+    - demand
+
 action_space:
-  - order_small
-  - order_large
+  type: string
+  enum:
+    - order_small
+    - order_large
+    - do_nothing
+
 reward:
-  description: profit from sales minus holding costs and stockout penalties
+  type: float
+  description: Profit from sales minus holding costs and stockout penalties
+
+episode:
+  max_steps: 30
+  initial_inventory: 1500
+  initial_money: 10000
+
 tasks:
-  easy: avoid stockouts with a basic ordering policy
-  medium: balance inventory to reduce stockouts and overstock
-  hard: maximize profit over the full episode
+  easy:
+    description: Minimize stockouts using basic ordering policy
+    objective: maximize fulfillment
+  medium:
+    description: Balance inventory to reduce stockouts and overstock
+    objective: minimize total penalty
+  hard:
+    description: Maximize total profit over the episode
+    objective: maximize profit
+
+parameters:
+  order_small_amount: 50
+  order_large_amount: 150
+  holding_cost_per_unit: 0.1
+  stockout_penalty_per_unit: 5.0
+  price_per_unit: 10

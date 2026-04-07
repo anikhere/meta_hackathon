@@ -1,13 +1,16 @@
 from env.entity import State
 import numpy as np 
 import random
-from env.reward import Reward
+from env.reward import compute_reward
 from env.observation import Observation
+
+
 class SupplyChainEnv:
     def __init__(self):
         self._state = None
         self.current_step = 0
         self.max_steps = 30
+    
     def reset(self):
         self._state = State(
             inventory=1500,
@@ -16,32 +19,38 @@ class SupplyChainEnv:
         )
         self.current_step = 0
         return self._state
-    def step(self,action):
+    
+    def step(self, action):
         state = self._state
         if action == 'order_small':
-            state.inventory +=50
+            state.inventory += 50
         elif action == 'order_large':
-            state.inventory +=150
-        demand = random.randint(5,20)
-        sold = min(state.inventory,demand)
+            state.inventory += 150
+        elif action == 'do_nothing':
+            pass
+        
+        demand = random.randint(5, 20)
+        sold = min(state.inventory, demand)
         state.inventory -= sold
-        state.money+=sold*10
+        state.money += sold * 10
         state.demand = demand
-        obs_obj = Observation(inventory=state.inventory,demand=state.demand)
+        
+        obs_obj = Observation(inventory=state.inventory, demand=state.demand)
         observation = obs_obj.to_dict()
-        reward_obj = Reward(
+        
+        reward, reward_info = compute_reward(
             sold=sold,
             demand=demand,
             inventory=state.inventory,
         )
-        reward = reward_obj.compute_reward(price=10)
-        self.current_step+=1
-        done = self.current_step>= self.max_steps
+        
+        self.current_step += 1
+        done = self.current_step >= self.max_steps
         info = {
-            'sold':sold,
-            'demand':demand
+            'sold': sold,
+            'demand': demand
         }
-        return observation,reward,done,info
-         
+        return observation, reward, done, info
+    
     def state(self):
         return self._state
