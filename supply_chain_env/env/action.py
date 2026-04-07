@@ -1,1 +1,3 @@
-just created the supply_chain_env/env/action.py
+ORDER_SMALL = 'order_small'
+ORDER_LARGE = 'order_large'
+ACTIONS = [ORDER_SMALL, ORDER_LARGE]

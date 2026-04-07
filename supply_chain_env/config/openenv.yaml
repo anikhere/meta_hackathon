@@ -1,1 +1,18 @@
-just created the supply_chain_env/config/open_env.yaml
+name: SupplyChainEnv
+description: A simple supply chain inventory management environment for ordering and demand fulfillment.
+observation_space:
+  inventory:
+    type: integer
+    description: current inventory after sales
+  demand:
+    type: integer
+    description: customer demand for the current step
+action_space:
+  - order_small
+  - order_large
+reward:
+  description: profit from sales minus holding costs and stockout penalties
+tasks:
+  easy: avoid stockouts with a basic ordering policy
+  medium: balance inventory to reduce stockouts and overstock
+  hard: maximize profit over the full episode

@@ -42,8 +42,6 @@ class SupplyChainEnv:
             'demand':demand
         }
         return observation,reward,done,info
-        
-        
-        
+         
     def state(self):
         return self._state
